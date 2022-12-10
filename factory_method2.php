@@ -4,26 +4,24 @@ namespace RefactoringGuru\FactoryMethod\Conceptual;
 abstract class DatabaseConnectionFactory
 {
     // abstract public function configureConnectionHost($host, $user, $password);
-    abstract public function setConnection();
-    public function configureConnectionHost($host, $user, $password): string
+    abstract public function createconnection();
+    public function configureConnection($host, $user, $password)
     {
         // Call the factory method to create a Product object.
-        $product = $this->factoryMethod();
+        $connection = $this->createConnection();
         // Now, use the product.
         $result = "Creator: The same creator's code has just worked with " .
-            $product->operation();
+        $connection->prepare().
+        $connection->executeQuery().
+        $connection->unload();
 
         return $result;
     }
 }
 
-/**
- * Concrete Creators override the factory method in order to change the
- * resulting product's type.
- */
 class MySQLConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new MySQLConnection();
     }
@@ -31,7 +29,7 @@ class MySQLConnectionFactory extends DatabaseConnectionFactory
 
 class OracleDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new OracleDBConnection();
     }
@@ -39,7 +37,7 @@ class OracleDBConnectionFactory extends DatabaseConnectionFactory
 
 class MariaDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new MariaDBConnection();
     }
@@ -47,7 +45,7 @@ class MariaDBConnectionFactory extends DatabaseConnectionFactory
 
 class CassandraDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new CassandraDBConnection();
     }
@@ -55,7 +53,7 @@ class CassandraDBConnectionFactory extends DatabaseConnectionFactory
 
 class PostgreSQLDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new PostgreDBConnection();
     }
@@ -63,7 +61,7 @@ class PostgreSQLDBConnectionFactory extends DatabaseConnectionFactory
 
 class SQLServerDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new SQLServerDBConnection();
     }
@@ -71,13 +69,13 @@ class SQLServerDBConnectionFactory extends DatabaseConnectionFactory
 
 class IngresDBConnectionFactory extends DatabaseConnectionFactory
 {
-    public function setConnection()
+    public function createConnection()
     {
         return new IngresDBConnection();
     }
 }
 
-
+ 
 
 interface DBConnection
 {
@@ -91,40 +89,119 @@ interface DBConnection
  */
 class MySQLConnection implements DBConnection
 {
-    public function operation(): string
+    public function prepare()
     {
-        return "{Result of the ConcreteProduct1}";
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
     }
 }
 
-class ConcreteProduct2 implements Product
+class SQLServerConnection implements DBConnection
 {
-    public function operation(): string
+    public function prepare()
     {
-        return "{Result of the ConcreteProduct2}";
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
     }
 }
 
-/**
- * The client code works with an instance of a concrete creator, albeit through
- * its base interface. As long as the client keeps working with the creator via
- * the base interface, you can pass it any creator's subclass.
- */
-function clientCode(Creator $creator)
+class MariaDBConnection implements DBConnection
 {
-    // ...
-    echo "Client: I'm not aware of the creator's class, but it still works.\n"
-        . $creator->someOperation();
-    // ...
+    public function prepare()
+    {
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
+    }
 }
 
-/**
- * The Application picks a creator's type depending on the configuration or
- * environment.
- */
-echo "App: Launched with the ConcreteCreator1.\n";
-clientCode(new ConcreteCreator1());
-echo "\n\n";
+class OracleDBConnection implements DBConnection
+{
+       public function prepare()
+    {
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
+    }
+}
 
-echo "App: Launched with the ConcreteCreator2.\n";
-clientCode(new ConcreteCreator2());
+class IngresDBConnection implements DBConnection
+{
+      public function prepare()
+    {
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
+    }
+}
+
+class PostgreSQLConnection implements DBConnection
+{
+      public function prepare()
+    {
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
+    }
+}
+
+class CassandraDBConnection implements DBConnection
+{
+    public function prepare()
+    {
+        return "{Successful preparation}";
+    }
+    public function executeQuery()
+    {
+        return "{Successful execution}";
+    }
+    public function unload()
+    {
+        return "{Successful unload}";
+    }
+
+function clientCode(DatabaseConnectionFactory $connection)
+{
+    // ...
+    echo "Working.\n"
+        . $connection->configureConnection($host, $user, $password);
+    // ...
+}
