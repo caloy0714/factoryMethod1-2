@@ -77,17 +77,17 @@ class Sea implements Transport
 }
 
 
-function clientCode(Logistics $creator)
+function clientCode(Logistics $logis)
 {
     // ...
     echo "Client Only\n"
-        . $creator->PlanDelivery();
+        . $logis->PlanDelivery();
     // ...
 }
 
-echo "Launch Truck\n";
-clientCode(new truck());
+echo "Launch RoadLogistics.\n";
+clientCode(new RoadLogistics());
 echo "\n\n";
 
-echo "Launch Boat\n";
-clientCode(new boat());
+echo "Launch SeaLogistics.\n";
+clientCode(new SeaLogistics());
